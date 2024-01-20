@@ -26,6 +26,8 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         if password != password2:
             raise serializers.ValidationError({'password': 'Password fields didn\'t match'})
         return attrs
+    
+    
 
     def create(self, validated_data):
         # Remove password2 from the validated data before creating the user
@@ -77,7 +79,7 @@ class SendPasswordResetEmailSerializer(serializers.Serializer):
             uid_bytes = force_bytes(user.pk)
             uid = urlsafe_base64_encode(uid_bytes)
             token = PasswordResetTokenGenerator().make_token(user)
-            link = f'http://localhost:3000/api/user/reset/{uid}/{token}'
+            link = f'http://localhost:3000/reset/{uid}/{token}'
             
             # Add the following line to actually send the email
             utils.Util.send_email({'to_email': email, 'email_subject': 'Password Reset', 'email_body': link})
